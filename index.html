@@ -4,7 +4,6 @@
 
 <!-- composant de l'exemple nft-video d'AR.js : lance la vidéo quand l'image est détectée -->
 <script>
-    window.onload = function() {
         AFRAME.registerComponent('videohandler', {
             init: function () {
                 var marker = this.el;
@@ -21,7 +20,6 @@
                 }.bind(this));
             }
         });
-    };
 </script>
 
 <!-- style for the loader -->
