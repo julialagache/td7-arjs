@@ -1,28 +1,24 @@
-<!doctype html>
-<html lang="fr">
+<!DOCTYPE html>
+<html>
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>TD7 AR.js</title>
-  <style>
-    body { font-family: system-ui, sans-serif; max-width: 640px; margin: 0 auto; padding: 24px 16px; line-height: 1.5; background: #fff; color: #111; }
-    a.btn { display: block; padding: 14px 16px; margin: 10px 0; background: #111; color: #fff; text-decoration: none; border-radius: 8px; }
-    small { color: #555; }
-  </style>
+    <meta charset="utf-8">
+    <title>AR.js Location-based</title>
+    <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
 </head>
-<body>
-  <h1>TD7 – AR.js</h1>
-  <p>BUT MMI 3 – R5.Crea.06 – Julia Lagache</p>
-
-  <h2>Partie 1 – Positionnement GPS</h2>
-  <a class="btn" href="1-gps/">Ouvrir (sur place, rue du Donjon)</a>
-
-  <h2>Partie 2 – Marqueur + vidéo</h2>
-  <a class="btn" href="2-marker-video/">Ouvrir</a>
-  <small>Marqueur à viser : <a href="a-imprimer/marqueur-partie2.png">marqueur-partie2.png</a></small>
-
-  <h2>Partie 3 – Image tracking (NFT)</h2>
-  <a class="btn" href="3-image-tracking/">Ouvrir</a>
-  <small>Image à viser : <a href="a-imprimer/image-partie3.jpeg">image-partie3.jpeg</a></small>
+<body style="margin: 0; overflow: hidden;">
+    <a-scene
+        vr-mode-ui="enabled: false"
+        arjs="sourceType: webcam; videoTexture: true; debugUIEnabled: false"
+        renderer="antialias: true; alpha: true"
+    >
+        <a-camera gps-new-camera="gpsMinDistance: 5"></a-camera>
+        <!-- Rue du Donjon, Corte -->
+        <a-entity
+            gltf-model="assets/mens.glb"
+            scale="1 1 1"
+            gps-new-entity-place="latitude: 42.306699560260455; longitude: 9.148512279247452"
+        ></a-entity>
+    </a-scene>
 </body>
 </html>
