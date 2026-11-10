@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TD7 - Partie 1 - AR GPS</title>
+  <!-- A-Frame 1.3 + AR.js (composants location-based gps-new-*) -->
+  <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
+  <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+  <style>
+    #info {
+      position: fixed; top: 10px; left: 10px; right: 10px; z-index: 9999;
+      background: rgba(0,0,0,.7); color: #fff; font: 14px sans-serif;
+      padding: 8px 12px; border-radius: 6px;
+    }
+  </style>
+</head>
+<body style="margin: 0; overflow: hidden;">
+  <div id="info">Recherche de la position GPS…</div>
+
+  <a-scene
+    vr-mode-ui="enabled: false"
+    loading-screen="enabled: false"
+    arjs="sourceType: webcam; videoTexture: true; debugUIEnabled: false"
+    renderer="antialias: true; alpha: true"
+  >
+    <!-- Caméra qui suit la position GPS du téléphone -->
+    <a-camera id="cam" gps-new-camera="gpsMinDistance: 5"></a-camera>
+
+    <!-- Objet 3D placé au point GPS de la rue du Donjon (Corte) -->
+    <a-entity
+      id="perso"
+      gltf-model="assets/mens.glb"
+      scale="3 3 3"
+      gps-new-entity-place="latitude: 42.306699560260455; longitude: 9.148512279247452"
+    ></a-entity>
+  </a-scene>
+
+  <script>
+    const LAT = 42.306699560260455, LON = 9.148512279247452;
+    const info = document.getElementById('info');
+    const cam = document.getElementById('cam');
+
+    // Mode test : ajouter ?test à l'URL pour simuler une position à ~10 m au sud du point
+    if (location.search.includes('test')) {
+      cam.setAttribute('gps-new-camera', 'gpsMinDistance: 5; simulateLatitude: ' + (LAT - 0.0001) + '; simulateLongitude: ' + LON);
+      info.textContent = 'Mode test : position simulée à ~10 m du point. Tourne-toi pour trouver le personnage.';
+    }
+
+    // Affiche la distance entre le téléphone et l'objet
+    function distance(lat1, lon1, lat2, lon2) {
+      const R = 6371000, r = Math.PI / 180;
+      const dLat = (lat2 - lat1) * r, dLon = (lon2 - lon1) * r;
+      const a = Math.sin(dLat / 2) ** 2 + Math.cos(lat1 * r) * Math.cos(lat2 * r) * Math.sin(dLon / 2) ** 2;
+      return 2 * R * Math.asin(Math.sqrt(a));
+    }
+    window.addEventListener('gps-camera-update-position', (e) => {
+      const p = e.detail.position;
+      const d = Math.round(distance(p.latitude, p.longitude, LAT, LON));
+      info.textContent = 'Distance au personnage : ' + d + ' m';
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TD7 - Partie 3 - AR Image Tracking</title>
+  <!-- import aframe and then ar.js with image tracking / location based features -->
+  <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@1c2407b26c61958baa93967b5412487cd94b290b/dist/aframe-master.min.js"></script>
+  <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
+
+  <!-- style for the loader -->
+  <style>
+    .arjs-loader {
+      height: 100%;
+      width: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      background-color: rgba(0, 0, 0, 0.8);
+      z-index: 9999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .arjs-loader div {
+      text-align: center;
+      font-size: 1.25em;
+      color: white;
+    }
+  </style>
+</head>
+<body style="margin: 0px; overflow: hidden;">
+  <!-- minimal loader shown until image descriptors are loaded -->
+  <div class="arjs-loader">
+    <div>Loading, please wait...</div>
+  </div>
+
+  <!-- a-frame scene -->
+  <a-scene
+    vr-mode-ui="enabled: false;"
+    renderer="logarithmicDepthBuffer: true;"
+    embedded
+    arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
+  >
+    <!-- a-nft : ancre de l'image tracking. url = assets/a (a.fset, a.fset3, a.iset sans extension) -->
+    <a-nft
+      type="nft"
+      url="assets/a"
+      smooth="true"
+      smoothCount="10"
+      smoothTolerance=".01"
+      smoothThreshold="5"
+    >
+      <!-- modèle 3D affiché au-dessus de l'image -->
+      <a-entity
+        gltf-model="assets/fichier.glb"
+        scale="5 5 5"
+        position="50 150 0"
+        rotation="-90 0 0"
+      ></a-entity>
+    </a-nft>
+
+    <!-- static camera that moves according to the device movements -->
+    <a-entity camera></a-entity>
+  </a-scene>
+
+  <script>
+    // Cache le loader une fois les descripteurs d'image chargés
+    window.addEventListener('arjs-nft-loaded', () => {
+      document.querySelector('.arjs-loader').style.display = 'none';
+    });
+  </script>
+</body>
+</html>
